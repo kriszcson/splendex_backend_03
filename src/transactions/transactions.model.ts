@@ -1,25 +1,27 @@
 import * as mongoose from 'mongoose';
 
 export const TransactionSchema = new mongoose.Schema({
-    account_number: { type: Number, required: true },
+    account: { type: mongoose.Schema.Types.ObjectId, ref: 'Account', required: true },
+    transaction_name: { type: String, required: true },
     transaction_type: { type: String, required: true },
     transaction_amount: { type: Number, required: true },
-    transaction_started: { type: Date, required: true },
-    transaction_finished: { type: Date, required: true },
+    started_on: { type: Date, required: true },
+    finished_on: { type: Date, required: true },
 })
 
 export interface Transaction extends mongoose.Document {
     _id: string;
-    account_number: number;
+    account: mongoose.Schema.Types.ObjectId;
+    transaction_name: string;
     transaction_type: TransactionType.Enum;
     transaction_amount: number;
-    transaction_started: Date;
-    transaction_finished: Date;
+    started_on: Date;
+    finished_on: Date;
 }
 
 export namespace TransactionType {
     export enum Enum {
-        INCOME,
-        EXPENSE
+        INCOME = 'bevétel',
+        EXPENSE = 'kiadás'
     }
 }

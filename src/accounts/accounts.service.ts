@@ -83,7 +83,7 @@ export class AccountsService {
     async deleteAccount(id: string) {
         const result = await this.accountModel.deleteOne({ _id: id }).exec();
         if (result.n === 0) {
-            throw new NotFoundException('Could nod find account!');
+            throw new NotFoundException('Could not find account!');
         }
         return { message: 'Successfully deleted account!' };
     }
@@ -93,7 +93,7 @@ export class AccountsService {
         try {
             account = await this.accountModel.findById(id).exec();
         } catch (err) {
-            throw new NotFoundException('Could nod find account!');
+            throw new NotFoundException('Could not find account!');
         }
         return account;
     }
