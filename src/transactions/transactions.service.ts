@@ -12,9 +12,11 @@ export class TransactionsService {
     constructor(@InjectModel('Transactions') private readonly transactionsModel: Model<Transaction>) { }
 
     async getAll() {
-        const transactions = await this.transactionsModel.find().exec();
+        const transactions = await this.transactionsModel
+            .find()
+            .populate('account', 'starting_balance, account_holder_name')
+            .exec();
         return transactions.map((transaction) => ({
-            id: transaction._id,
             account: transaction.account,
             transaction_name: transaction.transaction_name,
             transaction_type: transaction.transaction_type,
