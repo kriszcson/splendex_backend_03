@@ -14,7 +14,7 @@ export class TransactionsService {
     async getAll() {
         const transactions = await this.transactionsModel
             .find()
-            .populate('account', 'starting_balance, account_holder_name')
+            .populate('account')
             .exec();
         return transactions.map((transaction) => ({
             account: transaction.account,
