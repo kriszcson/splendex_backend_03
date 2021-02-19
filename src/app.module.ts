@@ -22,7 +22,7 @@ import { AuthService } from './auth/auth.service';
     inject: [ConfigService],
     useFactory: async (ConfigService: ConfigService) => ({
       secret: ConfigService.get('JWT_SECRET'),
-      signOptions: { expiresIn: '100s' }
+      signOptions: { expiresIn: '600s' }
     })
   }), ConfigModule.forRoot(), PassportModule, AuthModule, AccountsModule, TransactionsModule, MongooseModule.forRoot(process.env.DATABASE_URL)],
   controllers: [AppController],

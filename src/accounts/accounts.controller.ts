@@ -1,4 +1,5 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from "@nestjs/common";
+import { JwtAuthGuard } from "src/auth/jwt-auth.guard";
 
 import { AccountsService } from "./accounts.service";
 
@@ -31,6 +32,7 @@ export class AccountsController {
         }
     }
 
+    @UseGuards(JwtAuthGuard)
     @Get()
     async getAllAccounts() {
         const accounts = await this.accountService.getAccounts();
