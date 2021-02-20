@@ -35,7 +35,7 @@ export class AccountsController {
 
     @UseGuards(JwtAuthGuard)
     @Get()
-    async getAllAccounts() {
+    async getAllAccounts(): Promise<Object> {
         const accounts = await this.accountService.getAccounts();
         return {
             count: accounts.length,
@@ -45,7 +45,7 @@ export class AccountsController {
 
     @UseGuards(JwtAuthGuard)
     @Get(':id')
-    async getAccountById(@Param('id') id: string) {
+    async getAccountById(@Param('id') id: string): Promise<Object> {
         return this.accountService.getSignleAccount(id);
     }
 
@@ -58,14 +58,14 @@ export class AccountsController {
         @Body('starting_balance') starting_balance: number,
         @Body('created_on') created_on: Date,
         @Body('expires_in') expires_in: Date
-    ) {
+    ): Promise<Object> {
         return await this.accountService.updateAccount(id, account_holder_name, account_number, starting_balance, created_on, expires_in);
     }
 
     @UseGuards(JwtAuthGuard)
     @Delete(':id')
     async deleteById(
-        @Param('id') id: string) {
+        @Param('id') id: string): Promise<Object> {
         return await this.accountService.deleteAccount(id);
     }
 }

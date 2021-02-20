@@ -12,14 +12,14 @@ export class AuthService {
         return bcrypt.compare(pass, user.password);
     }
 
-    async login(user: any) {
+    async login(user: any): Promise<Object> {
         const payload = { email: user.email, sub: user._id };
         return {
             access_token: this.jwtService.sign(payload),
         };
     }
 
-    async signUp(email, password) {
+    async signUp(email, password): Promise<Object> {
         const newUser = await this.userService.createUser(email, password);
         if (newUser) {
             return this.login(newUser);

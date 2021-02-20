@@ -11,7 +11,7 @@ export class TransactionsService {
 
     constructor(@InjectModel('Transactions') private readonly transactionsModel: Model<Transaction>) { }
 
-    async getAll() {
+    async getAll(): Promise<any> {
         const transactions = await this.transactionsModel
             .find()
             .populate('account')
@@ -32,7 +32,7 @@ export class TransactionsService {
         transaction_type: string,
         transaction_amount: number,
         started_on: Date,
-        finished_on: Date,) {
+        finished_on: Date,): Promise<Object | Transaction> {
         const transactionType = this.getEnumFromString(transaction_type);
         if (transactionType) {
             const newTransaction = new this.transactionsModel({
@@ -50,7 +50,7 @@ export class TransactionsService {
         }
     }
 
-    async getSingleTransaction(id: string) {
+    async getSingleTransaction(id: string): Promise<Object> {
         const transaction = await this.findTransaction(id);
         return {
             id: transaction._id,
@@ -71,7 +71,7 @@ export class TransactionsService {
         transaction_amount: number,
         started_on: Date,
         finished_on: Date
-    ) {
+    ): Promise<Object> {
         const transaction = await this.findTransaction(id);
         let updatedProps = [];
         if (account) {
@@ -105,7 +105,7 @@ export class TransactionsService {
         }
     }
 
-    async deleteById(id: string) {
+    async deleteById(id: string): Promise<Object> {
         const result = await this.transactionsModel.deleteOne({ _id: id }).exec();
         if (result.n === 0) {
             throw new NotFoundException('Could not find transaction!');
@@ -127,7 +127,7 @@ export class TransactionsService {
         }
      */
 
-    private getEnumFromString(transaction_type: string) {
+    private getEnumFromString(transaction_type: string): any {
         switch (transaction_type) {
             case TransactionType.Enum.EXPENSE: {
                 return TransactionType.Enum.EXPENSE;

@@ -13,7 +13,7 @@ export class TransactionsController {
 
     @UseGuards(JwtAuthGuard)
     @Get()
-    async getAllTransactions() {
+    async getAllTransactions(): Promise<Object> {
         const transactions = await this.transactionsService.getAll();
         return {
             count: transactions.length,

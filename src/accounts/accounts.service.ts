@@ -9,7 +9,7 @@ export class AccountsService {
 
     constructor(@InjectModel('Account') private readonly accountModel: Model<Account>) { }
 
-    async insertAccount(account_holder_name: string, account_number: number, starting_balance: number, created_on: Date, expires_in: Date,) {
+    async insertAccount(account_holder_name: string, account_number: number, starting_balance: number, created_on: Date, expires_in: Date,): Promise<Account> {
         const account = new this.accountModel({
             account_holder_name,
             account_number,
@@ -21,7 +21,7 @@ export class AccountsService {
         return account;
     }
 
-    async getAccounts() {
+    async getAccounts(): Promise<Object[]> {
         const accounts = await this.accountModel.find().exec();
         return accounts.map((acc) => ({
             account_holder_name: acc.account_holder_name,
@@ -32,7 +32,7 @@ export class AccountsService {
         }))
     }
 
-    async getSignleAccount(id: string) {
+    async getSignleAccount(id: string): Promise<Object> {
         const acc = await this.findAccount(id);
         return {
             account_holder_name: acc.account_holder_name,
@@ -49,7 +49,7 @@ export class AccountsService {
         account_number: number,
         starting_balance: number,
         created_on: Date,
-        expires_in: Date) {
+        expires_in: Date): Promise<Object> {
         const account = await this.findAccount(id);
         let updatedProps = [];
 
@@ -80,7 +80,7 @@ export class AccountsService {
         }
     }
 
-    async deleteAccount(id: string) {
+    async deleteAccount(id: string): Promise<Object> {
         const result = await this.accountModel.deleteOne({ _id: id }).exec();
         if (result.n === 0) {
             throw new NotFoundException('Could not find account!');
@@ -88,7 +88,7 @@ export class AccountsService {
         return { message: 'Successfully deleted account!' };
     }
 
-    private async findAccount(id: string) {
+    private async findAccount(id: string): Promise<Account> {
         let account;
         try {
             account = await this.accountModel.findById(id).exec();
