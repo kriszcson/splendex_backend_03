@@ -1,5 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
-import { PassThrough } from 'stream';
+import { Controller, Get, Param } from '@nestjs/common';
 import { UserService } from './user.service';
 
 @Controller('users')
@@ -14,13 +13,5 @@ export class UserController {
     @Get(':email')
     async findByEmail(@Param('email') email: string) {
         return await this.userService.findByEmail(email);
-    }
-
-    @Post('signup')
-    async signUp(
-        @Body('email') email: string,
-        @Body('password') password: string
-    ) {
-        return await this.userService.createUser(email, password);
     }
 }

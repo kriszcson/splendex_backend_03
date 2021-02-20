@@ -8,6 +8,7 @@ export class AccountsController {
 
     constructor(private readonly accountService: AccountsService) { }
 
+    @UseGuards(JwtAuthGuard)
     @Post()
     async addACcount(
         @Body('account_holder_name') account_holder_name: string,
@@ -42,11 +43,13 @@ export class AccountsController {
         };
     }
 
+    @UseGuards(JwtAuthGuard)
     @Get(':id')
     async getAccountById(@Param('id') id: string) {
         return this.accountService.getSignleAccount(id);
     }
 
+    @UseGuards(JwtAuthGuard)
     @Patch(':id')
     async updateById(
         @Param('id') id: string,
@@ -59,6 +62,7 @@ export class AccountsController {
         return await this.accountService.updateAccount(id, account_holder_name, account_number, starting_balance, created_on, expires_in);
     }
 
+    @UseGuards(JwtAuthGuard)
     @Delete(':id')
     async deleteById(
         @Param('id') id: string) {

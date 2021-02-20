@@ -1,15 +1,17 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from "@nestjs/common";
 import * as mongoose from 'mongoose';
 
 
 import { TransactionsService } from "./transactions.service";
 import { TransactionType } from './transactions.model';
+import { JwtAuthGuard } from "src/auth/jwt-auth.guard";
 
 @Controller('transactions')
 export class TransactionsController {
 
     constructor(private readonly transactionsService: TransactionsService) { }
 
+    @UseGuards(JwtAuthGuard)
     @Get()
     async getAllTransactions() {
         const transactions = await this.transactionsService.getAll();
@@ -19,6 +21,7 @@ export class TransactionsController {
         }
     }
 
+    @UseGuards(JwtAuthGuard)
     @Get(':id')
     async getSingleTransaction(
         @Param('id') id: string
@@ -27,6 +30,7 @@ export class TransactionsController {
         return transactionById;
     }
 
+    @UseGuards(JwtAuthGuard)
     @Post()
     async insertTransaction(
         @Body('account') account: mongoose.Schema.Types.ObjectId,
@@ -45,6 +49,7 @@ export class TransactionsController {
             finished_on);
     }
 
+    @UseGuards(JwtAuthGuard)
     @Patch(':id')
     async updateTransaction(
         @Param('id') id: string,
@@ -66,6 +71,7 @@ export class TransactionsController {
         )
     }
 
+    @UseGuards(JwtAuthGuard)
     @Delete(':id')
     async deleteTransaction(
         @Param('id') id: string
