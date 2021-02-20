@@ -1,5 +1,7 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
+import * as bcrypt from 'bcrypt';
+
 import { Model } from "mongoose";
 import { User } from "./user.model";
 
@@ -18,21 +20,29 @@ export class UserService {
         }))
     }
 
-    async findByEmail(email: string): Promise<User | undefined> {
-        const user = this.userModel.findOne({ email: email }).exec();
-        console.log(user);
+    async findByEmail(email: string) {
+        const user = await this.userModel.findOne({ email: email });
         return user;
     }
 
-    /* 
-    private async findUser(id: string): Promise<User> {
-        let user: Promise<User>;
-        try {
-            user = this.userModel.findById(id).exec();
-        } catch (err) {
-            throw new NotFoundException('Could not find transaction!');
+    async createUser(email: string, password: string) {
+        const haveUser = await this.findByEmail(email);
+        console.log(haveUser);
+        if (haveUser) {
+            return null;
+        } else {
+            const user = new this.userModel({
+                email: email,
+                password: await this.hashPassword(password)
+            })
+            await user.save();
+            return user;
         }
-        return user;
-    } */
+    }
 
+    private async hashPassword(password: string) {
+        const saltOrRounds = 10;;
+        const hash = await bcrypt.hash(password, saltOrRounds);
+        return hash;
+    }
 }

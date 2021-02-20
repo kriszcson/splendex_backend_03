@@ -1,4 +1,4 @@
-import { Controller, Get, Request, Post, UseGuards } from '@nestjs/common';
+import { Controller, Get, Request, Post, UseGuards, Body } from '@nestjs/common';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { AuthService } from './auth/auth.service';
 import { AuthGuard } from '@nestjs/passport';
@@ -11,6 +11,14 @@ export class AppController {
   @Post('auth/login')
   async login(@Request() req) {
     return await this.authService.login(req.user);
+  }
+
+  @Post('auth/signup')
+  async signUp(
+    @Body('email') email: string,
+    @Body('password') password: string
+  ) {
+    return await this.authService.signUp(email, password);
   }
 
   @UseGuards(JwtAuthGuard)
