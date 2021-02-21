@@ -32,7 +32,9 @@ export class TransactionsService {
         transaction_type: string,
         transaction_amount: number,
         started_on: Date,
-        finished_on: Date,): Promise<Object | Transaction> {
+        finished_on: Date,
+        balancing_message: any
+    ): Promise<Object | Transaction> {
         const transactionType = this.getEnumFromString(transaction_type);
         if (transactionType) {
             const newTransaction = new this.transactionsModel({
@@ -44,7 +46,7 @@ export class TransactionsService {
                 finished_on: new Date(finished_on),
             })
             await newTransaction.save();
-            return newTransaction;
+            return balancing_message;
         } else {
             return { message: 'Not valid transaction type inserted' };
         }

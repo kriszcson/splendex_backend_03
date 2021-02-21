@@ -10,7 +10,8 @@ import { AccountSchema } from './accounts.model';
         name: 'Account', schema: AccountSchema
     }])],
     controllers: [AccountsController],
-    providers: [AccountsService]
+    providers: [AccountsService],
+    exports: [AccountsService]
 })
 
 export class AccountsModule { }

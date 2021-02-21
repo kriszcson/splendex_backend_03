@@ -1,7 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose';
+
 import { Account } from './accounts.model';
+import { TransactionType } from '../transactions/transactions.model';
 
 @Injectable()
 export class AccountsService {
@@ -86,6 +88,39 @@ export class AccountsService {
             throw new NotFoundException('Could not find account!');
         }
         return { message: 'Successfully deleted account!' };
+    }
+
+    async balanceAccount(id: string, amount: number, type: TransactionType.Enum): Promise<any> {
+        let account = await this.findAccount(id);
+        switch (type) {
+            case TransactionType.Enum.EXPENSE:
+                if (account.starting_balance - amount < 0) {
+                    return {
+                        message: ('Dont have enough money on your account!')
+                    }
+                }
+                else {
+                    account.starting_balance -= amount;
+                    await account.save();
+                    return {
+                        message: "The amount of transaction successfully deducted from your account!",
+                        transaction_type: type,
+                        amount: amount,
+                        account: account
+                    }
+                }
+                break;
+            case TransactionType.Enum.INCOME:
+                account.starting_balance += amount;
+                await account.save();
+                return {
+                    message:
+                        "The amount of transaction successfully added to your account!",
+                    transaction_type: type,
+                    transaction_amount: amount,
+                    account: account
+                }
+        }
     }
 
     private async findAccount(id: string): Promise<Account> {
